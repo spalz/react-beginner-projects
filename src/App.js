@@ -1,60 +1,53 @@
-import './index.scss';
+import React, { useState } from "react";
 
-const questions = [
-  {
-    title: 'React - это ... ?',
-    variants: ['библиотека', 'фреймворк', 'приложение'],
-    correct: 0,
-  },
-  {
-    title: 'Компонент - это ... ',
-    variants: ['приложение', 'часть приложения или страницы', 'то, что я не знаю что такое'],
-    correct: 1,
-  },
-  {
-    title: 'Что такое JSX?',
-    variants: [
-      'Это простой HTML',
-      'Это функция',
-      'Это тот же HTML, но с возможностью выполнять JS-код',
-    ],
-    correct: 2,
-  },
-];
+import QuizGame from "./QuizGame";
+import QuizResult from "./QuizResult";
 
-function Result() {
-  return (
-    <div className="result">
-      <img src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" />
-      <h2>Вы отгадали 3 ответа из 10</h2>
-      <button>Попробовать снова</button>
-    </div>
-  );
-}
+import "./index.scss";
+import questions from "./questions.json";
 
-function Game() {
-  return (
-    <>
-      <div className="progress">
-        <div style={{ width: '50%' }} className="progress__inner"></div>
-      </div>
-      <h1>Что такое useState?</h1>
-      <ul>
-        <li>Это функция для хранения данных компонента</li>
-        <li>Это глобальный стейт</li>
-        <li>Это когда на ты никому не нужен</li>
-      </ul>
-    </>
-  );
-}
+export const App = () => {
+  const [success, setSuccess] = useState(false);
+  const [step, setStep] = useState(0);
+  const [correctQuestion, setCorrectQuestion] = useState(0);
 
-function App() {
+  const question = questions[step];
+  const countQuestions = questions.length;
+
+  const onClickVariant = (index) => {
+    setStep(step + 1);
+    if (index) {
+      setCorrectQuestion(correctQuestion + 1);
+    }
+    if (step >= 2) {
+      setSuccess(true);
+    }
+  };
+
+  const resetQuiz = (index) => {
+    setStep(0);
+    setSuccess(false);
+    setCorrectQuestion(0)
+  };
+
   return (
     <div className="App">
-      <Game />
-      {/* <Result /> */}
+      {!success ? (
+        <QuizGame
+          step={step}
+          question={question}
+          onClickVariant={onClickVariant}
+          countQuestions={countQuestions}
+        />
+      ) : (
+        <QuizResult
+          correctQuestion={correctQuestion}
+          countQuestions={countQuestions}
+          resetQuiz={resetQuiz}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default App;
