@@ -1,30 +1,35 @@
-import React from 'react';
+import React from "react";
+import PT from "prop-types";
 
-const defaultCurrencies = ['RUB', 'USD', 'EUR', 'GBP'];
+const defaultCurrencies = ["usd", "kgs", "rub", "eur", "chf"];
 
-export const Block = ({ value, currency, onChangeValue, onChangeCurrency }) => (
-  <div className="block">
-    <ul className="currencies">
-      {defaultCurrencies.map((cur) => (
-        <li
-          onClick={() => onChangeCurrency(cur)}
-          className={currency === cur ? 'active' : ''}
-          key={cur}>
-          {cur}
-        </li>
-      ))}
-      <li>
-        <svg height="50px" viewBox="0 0 50 50" width="50px">
-          <rect fill="none" height="50" width="50" />
-          <polygon points="47.25,15 45.164,12.914 25,33.078 4.836,12.914 2.75,15 25,37.25 " />
-        </svg>
-      </li>
-    </ul>
-    <input
-      onChange={(e) => onChangeValue(e.target.value)}
-      value={value}
-      type="number"
-      placeholder={0}
-    />
-  </div>
-);
+export const Block = ({ value, currency, onChangeValue, onChangeCurrency }) => {
+  return (
+    <div className="block">
+      <ul className="currencies">
+        {defaultCurrencies.map((cur) => (
+          <li
+            onClick={() => onChangeCurrency(cur)}
+            className={currency === cur ? "active" : ""}
+            key={cur}
+          >
+            {cur.toLocaleUpperCase()}
+          </li>
+        ))}
+      </ul>
+      <input
+        onChange={(e) => onChangeValue(e.target.value)}
+        value={value}
+        type="number"
+        placeholder={0}
+      />
+    </div>
+  );
+};
+
+Block.propTypes = {
+  value: PT.oneOfType([PT.string, PT.number]),
+  currency: PT.string.isRequired,
+  onChangeValue: PT.func,
+  onChangeCurrency: PT.func,
+};
